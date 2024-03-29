@@ -1,0 +1,25 @@
+// This file stores the scoring logic
+// Simply extend the flags object to add more flags :)
+
+var competition_end_date = new Date('2024-05-01T00:00:00Z');
+
+const flags = {
+    "flag{example_flag}": 100,
+    "flag{example_flag2}": 200,
+    "flag{example_flag3}": 300,
+}
+
+function isValidFlag(flag) {
+    return flag in flags;
+}
+
+function getFlagValue(flag) {
+    return flags[flag];
+}
+
+module.exports = {
+    competition_end_date,
+    isValidFlag,
+    getFlagValue
+}
+
