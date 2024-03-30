@@ -32,11 +32,19 @@ nav.navbar.navbar-expand-md.navbar-dark.bg-dark.fixed-top
 		.alert.alert-danger #{error}
 	if success
 		.alert.alert-success #{success}	
-	form(action='/submit' method='POST')
+	form(action='/submit' method='POST' enctype='multipart/form-data')
 		.form-group
-			label(for='email') Flag
-			input#flag.form-control(type='text' name='flag' required)
-		button.btn.btn-primary(type='submit') Submit Flag
+			label(for='flag') Flag
+			input#flag.form-control(type='text' name='flag')
+			button.btn.btn-primary(type='submit') Submit Flag
+		.form-group
+			label(for='writeup') Writeup
+			input#writeup.form-control(type='file' name='writeup')
+			button.btn.btn-primary(type='submit') Submit Writeup
+		.form-group
+			label(for='report') Report
+			input#report.form-control(type='file' name='report')
+			button.btn.btn-primary(type='submit') Submit Report
 	
 script(src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js')
 script(src='https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js')
