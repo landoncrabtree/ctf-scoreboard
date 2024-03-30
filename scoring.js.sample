@@ -3,13 +3,15 @@
 // USAGE:
 // - competition_name: The name of the competition.
 // competition_end_date: The date when the competition ends. Used to enforce the competition end date.
+// logo_url: The URL of the competition logo.
 // flags: A dictionary of flags and their corresponding scores.
 
 // NOTE:
 // If you don't want to enable writeup and report submission, simply remove the fields from views/submit.pug
 
-const competition_name = "Example";
-const competition_end_date = new Date('2024-05-01T00:00:00Z');
+const competitionName = "Example";
+const competitionEndDate = new Date('2024-05-01T00:00:00Z');
+const competitionLogoURL = "https://static.vecteezy.com/system/resources/previews/010/438/507/non_2x/pixel-trophy-cup-free-vector.jpg";
 
 const flags = {
     "flag{example_flag}": 100,
@@ -18,7 +20,7 @@ const flags = {
     "flag{example_flag4}": 400
 }
 
-const total_flags = Object.keys(flags).length;
+const totalAvailableFlags = Object.keys(flags).length;
 
 /**
  * Check if a flag is valid.
@@ -40,9 +42,10 @@ function getFlagValue(flag) {
 }
 
 module.exports = {
-    competition_name,
-    competition_end_date,
-    total_flags,
+    competitionName,
+    competitionEndDate,
+    competitionLogoURL,
+    totalAvailableFlags,
     isValidFlag,
     getFlagValue
 }

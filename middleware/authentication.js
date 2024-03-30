@@ -7,7 +7,7 @@
  * @param {Function} next - Express next function
  */
 const userAuthenticated = (req, res, next) => {
-	if (!req.session.user_id) {
+	if (!req.session.uid) {
 		return res.redirect('/login');
 	}
 	next();

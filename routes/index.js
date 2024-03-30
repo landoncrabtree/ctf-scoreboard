@@ -14,7 +14,7 @@ const storage = multer.diskStorage({
 		cb(null, path.join(__dirname, '../uploads'))
 	},
 	filename: function (req, file, cb) {
-		cb(null, req.session.user_id + '_' + file.originalname)
+		cb(null, req.session.uid + '_' + file.originalname)
 	}
 });
 
@@ -65,7 +65,7 @@ router.post('/login', async function(req, res, next) {
 			throw new Error('Invalid email or password.');
 		}
 
-		req.session.user_id = user.id;
+		req.session.uid = user.id;
 		return res.redirect('/');
 	} catch (err) {
 		return res.render('login', {
@@ -111,7 +111,7 @@ router.post('/submit', cpUpload, authMiddleware.userAuthenticated, async functio
 	const flag = req.body.flag;
 	const writeup = req.files['writeup'] ? req.files['writeup'][0] : null;
 	const report = req.files['report'] ? req.files['report'][0] : null;
-	const user_id = req.session.user_id;
+	const uid = req.session.uid;
 
 	try {
 		if (req.fileValidationError) {
@@ -138,13 +138,13 @@ router.post('/submit', cpUpload, authMiddleware.userAuthenticated, async functio
 			}
 
 			// Check if the user has already submitted this flag
-			const submissions = await db.getUserSubmissions(user_id);
+			const submissions = await db.getUserSubmissions(uid);
 			if (submissions.find(s => s.flag === flag)) {
 				throw new Error('Flag already submitted.');
 			}
 
 			const value = scoring.getFlagValue(flag);
-			await db.submitFlag(user_id, flag, value);
+			await db.submitFlag(uid, flag, value);
 
 			return res.render('submit', {
 				success: 'Flag submitted successfully!',
@@ -158,7 +158,7 @@ router.post('/submit', cpUpload, authMiddleware.userAuthenticated, async functio
 });
 
 router.get('/logout', async function(req, res, next) {
-	req.session.user_id = null;
+	req.session.uid = null;
 	return res.redirect('/login');
 });
 

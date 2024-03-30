@@ -4,16 +4,17 @@ var db = require('../db');
 var scoring = require('../scoring');
 
 /**
- * Provide the competition end date to the view.
+ * Pass the competition configuration to the view locals so it can be rendered in the view.
  * @param {Object} req - Express request object
  * @param {Object} res - Express response object
  * @param {Function} next - Express next function
  */
 const passConfig = async (req, res, next) => {
-	res.locals.competition_end_date = scoring.competition_end_date.toISOString();
-	res.locals.competition_name = scoring.competition_name;
-	res.locals.total_flags = scoring.total_flags;
-	res.locals.user_id = req.session.user_id;
+	res.locals.competitionEndDate = scoring.competitionEndDate.toISOString();
+	res.locals.competitionName = scoring.competitionName;
+	res.locals.competitionLogoURL = scoring.competitionLogoURL;
+	res.locals.totalAvailableFlags = scoring.totalAvailableFlags;
+	res.locals.uid = req.session.uid;
 	next();
 }
 
@@ -26,12 +27,10 @@ const passConfig = async (req, res, next) => {
 const checkCompetitionOver = async (req, res, next) => {
 	users = await db.getAllUsers();
 	users.sort((a, b) => b.score - a.score);
-	if (new Date() > scoring.competition_end_date) {
+	if (new Date() > scoring.competitionEndDate) {
 		return res.render('index', {
-			title: 'Scoreboard',
 			users: users,
-			error: 'The competition is over.',
-			user_id: req.session.user_id
+			error: 'The competition has ended.',
 		});
 	}
 	next();

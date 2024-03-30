@@ -1,7 +1,6 @@
 // Description: This file contains the database logic for the application.
 
 var sqlite3 = require('sqlite3').verbose();
-var logger = require('morgan');
 var path = require('path');
 
 var database = new sqlite3.Database(path.join(__dirname, 'users.db'), (err) => {
@@ -86,14 +85,14 @@ async function createUser(name, email, password) {
 
 /**
  * Get all submissions for a user.
- * @param {number} user_id - The ID of the user.
+ * @param {number} uid - The ID of the user.
  * @returns {Promise<Array<Object>>} - An array of submission objects.
  * @throws {Error} - Throws an error if the query fails.
  * @async
  */
-async function getUserSubmissions(user_id) {
+async function getUserSubmissions(uid) {
 	return new Promise((resolve, reject) => {
-		database.all('SELECT * FROM submitted_flags WHERE user_id = ?', [user_id], (err, rows) => {
+		database.all('SELECT * FROM submitted_flags WHERE user_id = ?', [uid], (err, rows) => {
     		if (err) {
     			return reject(err);
     		}
@@ -104,20 +103,20 @@ async function getUserSubmissions(user_id) {
 
 /**
  * Submit a flag for a user.
- * @param {number} user_id - The ID of the user.
+ * @param {number} uid - The ID of the user.
  * @param {string} flag - The flag to submit.
  * @param {number} value - The value of the flag.
  * @returns {Promise<void>}
  * @throws {Error} - Throws an error if the query fails.
  * @async
  */
-async function submitFlag(user_id, flag, value) {
+async function submitFlag(uid, flag, value) {
 	return new Promise((resolve, reject) => {
-		database.run('INSERT INTO submitted_flags (user_id, flag) VALUES (?, ?)', [user_id, flag], (err) => {
+		database.run('INSERT INTO submitted_flags (user_id, flag) VALUES (?, ?)', [uid, flag], (err) => {
 			if (err) {
 				return reject(err);
 			}
-			database.run('UPDATE users SET score = score + ?, num_flags = num_flags + 1 WHERE id = ?', [value, user_id], (err) => {
+			database.run('UPDATE users SET score = score + ?, num_flags = num_flags + 1 WHERE id = ?', [value, uid], (err) => {
 				if (err) {
 					return reject(err);
 				}
