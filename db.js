@@ -1,4 +1,7 @@
+// Description: This file contains the database logic for the application.
+
 var sqlite3 = require('sqlite3').verbose();
+var logger = require('morgan');
 var path = require('path');
 
 var database = new sqlite3.Database(path.join(__dirname, 'users.db'), (err) => {
@@ -8,6 +11,13 @@ var database = new sqlite3.Database(path.join(__dirname, 'users.db'), (err) => {
     console.log('Connected to the users database.');
 });
 
+/**
+ * Get a user by their email.
+ * @param {string} email - The email of the user.
+ * @returns {Promise<Object>} - The user object.
+ * @throws {Error} - Throws an error if the query fails.
+ * @async
+ */
 async function getUserByEmail(email) {
 	return new Promise((resolve, reject) => {
     	database.get('SELECT * FROM users WHERE email = ?', [email], (err, row) => {
@@ -19,6 +29,13 @@ async function getUserByEmail(email) {
 	});
 }
 
+/**
+ * Get a user by their ID.
+ * @param {number} id - The ID of the user.
+ * @returns {Promise<Object>} - The user object.
+ * @throws {Error} - Throws an error if the query fails.
+ * @async
+ */
 async function getUserById(id) {
 	return new Promise((resolve, reject) => {
 		database.get('SELECT * FROM users WHERE id = ?', [id], (err, row) => {
@@ -30,6 +47,12 @@ async function getUserById(id) {
 	});
 }
 
+/**
+ * Get all users.
+ * @returns {Promise<Array<Object>>} - An array of user objects.
+ * @throws {Error} - Throws an error if the query fails.
+ * @async
+ */
 async function getAllUsers() {
 	return new Promise((resolve, reject) => {
 		database.all('SELECT * FROM users', (err, rows) => {
@@ -41,6 +64,15 @@ async function getAllUsers() {
 	});
 }
 
+/**
+ * Create a new user.
+ * @param {string} name - The name of the user.
+ * @param {string} email - The email of the user.
+ * @param {string} password - The SHA256 password hash of the user.
+ * @returns {Promise<void>}
+ * @throws {Error} - Throws an error if the query fails.
+ * @async
+ */
 async function createUser(name, email, password) {
 	return new Promise((resolve, reject) => {
 		database.run('INSERT INTO users (name, email, password, score) VALUES (?, ?, ?, 0)', [name, email, password], (err) => {
@@ -51,7 +83,14 @@ async function createUser(name, email, password) {
 		});
 	});
 }
-  
+
+/**
+ * Get all submissions for a user.
+ * @param {number} user_id - The ID of the user.
+ * @returns {Promise<Array<Object>>} - An array of submission objects.
+ * @throws {Error} - Throws an error if the query fails.
+ * @async
+ */
 async function getUserSubmissions(user_id) {
 	return new Promise((resolve, reject) => {
 		database.all('SELECT * FROM submitted_flags WHERE user_id = ?', [user_id], (err, rows) => {
@@ -63,6 +102,15 @@ async function getUserSubmissions(user_id) {
 	});
 }
 
+/**
+ * Submit a flag for a user.
+ * @param {number} user_id - The ID of the user.
+ * @param {string} flag - The flag to submit.
+ * @param {number} value - The value of the flag.
+ * @returns {Promise<void>}
+ * @throws {Error} - Throws an error if the query fails.
+ * @async
+ */
 async function submitFlag(user_id, flag, value) {
 	return new Promise((resolve, reject) => {
 		database.run('INSERT INTO submitted_flags (user_id, flag) VALUES (?, ?)', [user_id, flag], (err) => {
@@ -80,6 +128,7 @@ async function submitFlag(user_id, flag, value) {
 }
 
   
+// Create the users and submitted_flags tables if they don't exist
 database.serialize(() => {
 	const create_users = `
 	CREATE TABLE IF NOT EXISTS users (
@@ -101,10 +150,11 @@ database.serialize(() => {
 
 	database.run(create_users);
   	database.run(create_submissions);
+
+	// For initial testing
   	// database.run(populate_submissions);
   	// database.run(populate_users);
 });
-
 
 module.exports = {
 	getUserByEmail,

@@ -1,24 +1,48 @@
-// This file stores the scoring logic
-// Simply extend the flags object to add more flags :)
+// Description: This file contains the scoring logic for the scoreboard.
 
-var competition_end_date = new Date('2024-05-01T00:00:00Z');
+// USAGE:
+// - competition_name: The name of the competition.
+// competition_end_date: The date when the competition ends. Used to enforce the competition end date.
+// flags: A dictionary of flags and their corresponding scores.
+
+// NOTE:
+// If you don't want to enable writeup and report submission, simply remove the fields from views/submit.pug
+
+const competition_name = "Example";
+const competition_end_date = new Date('2024-05-01T00:00:00Z');
 
 const flags = {
     "flag{example_flag}": 100,
     "flag{example_flag2}": 200,
     "flag{example_flag3}": 300,
+    "flag{example_flag4}": 400
 }
 
+const total_flags = Object.keys(flags).length;
+
+/**
+ * Check if a flag is valid.
+ * @param {string} flag - The flag to check.
+ * @returns {boolean} - True if the flag is valid, false otherwise.
+ */
 function isValidFlag(flag) {
     return flag in flags;
 }
 
+
+/**
+ * Get the value of a flag.
+ * @param {string} flag - The flag to get the value of.
+ * @returns {number} - The value of the flag.
+ */
 function getFlagValue(flag) {
     return flags[flag];
 }
 
 module.exports = {
+    competition_name,
     competition_end_date,
+    total_flags,
     isValidFlag,
     getFlagValue
 }

@@ -30,8 +30,8 @@ const upload = multer({
 	}
 });
 
-// Enforce competition end date on all routes
-router.use(compMiddleware.competitionOver);
+router.use(compMiddleware.passConfig); // Pass the scoring configuration to the view
+router.use(compMiddleware.checkCompetitionOver); // Freeze functionality after competition end date
 
 /* GET scoreboard page. */
 router.get('/', async function(req, res, next) {
@@ -40,17 +40,13 @@ router.get('/', async function(req, res, next) {
     // Sort the users by score (descending)
 	users.sort((a, b) => b.score - a.score);
     return res.render('index', {
-		title: 'Scoreboard',
-		users: users,
-		user_id: req.session.user_id
+		users: users
 	});
 });
 
 /* GET login page. */
 router.get('/login', async function(req, res, next) {
-	return res.render('login', {
-		title: 'Login'
-	});
+	return res.render('login');
 });
 
 router.post('/login', async function(req, res, next) {
@@ -73,7 +69,6 @@ router.post('/login', async function(req, res, next) {
 		return res.redirect('/');
 	} catch (err) {
 		return res.render('login', {
-			title: 'Login',
 			error: err.message
 		});
 	}
@@ -81,10 +76,7 @@ router.post('/login', async function(req, res, next) {
 
 /* GET register page. */
 router.get('/register', async function(req, res, next) {
-	return res.render('register', {
-		title: 'Register',
-		user_id: req.session.user_id
-	});
+	return res.render('register');
 });
 
 router.post('/register', async function(req, res, next) {
@@ -104,7 +96,6 @@ router.post('/register', async function(req, res, next) {
 		return res.redirect('/login');
 	} catch (err) {
 		return res.render('register', {
-			title: 'Register',
 			error: err.message
 		});
 	}
@@ -112,10 +103,7 @@ router.post('/register', async function(req, res, next) {
 
 /* GET submit page. */
 router.get('/submit', authMiddleware.userAuthenticated, async function(req, res, next) {
-	return res.render('submit', {
-		title: 'Submit Flag',
-		user_id: req.session.user_id
-	});
+	return res.render('submit');
 });
 
 const cpUpload = upload.fields([{ name: 'writeup', maxCount: 1 }, { name: 'report', maxCount: 1 }])
@@ -126,7 +114,6 @@ router.post('/submit', cpUpload, authMiddleware.userAuthenticated, async functio
 	const user_id = req.session.user_id;
 
 	try {
-
 		if (req.fileValidationError) {
 			throw new Error(req.fileValidationError);
 		}
@@ -139,9 +126,7 @@ router.post('/submit', cpUpload, authMiddleware.userAuthenticated, async functio
 		// Handle writeup/report submission
 		if (writeup || report) {
 			return res.render('submit', {
-				title: 'Submit Flag',
-				success: 'Document submitted successfully! Pending manual scoring.',
-				user_id: user_id
+				success: 'Document submitted successfully! Pending manual scoring.'
 			});
 		}
 
@@ -162,16 +147,12 @@ router.post('/submit', cpUpload, authMiddleware.userAuthenticated, async functio
 			await db.submitFlag(user_id, flag, value);
 
 			return res.render('submit', {
-				title: 'Submit Flag',
 				success: 'Flag submitted successfully!',
-				user_id: user_id
 			});
 		}
 	} catch (err) {
 		return res.render('submit', {
-			title: 'Submit Flag',
 			error: err.message,
-			user_id: user_id
 		});
 	}
 });

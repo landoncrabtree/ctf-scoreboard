@@ -1,0 +1,18 @@
+// Navigation Bar
+nav.navbar.navbar-expand-md.navbar-dark.bg-dark.fixed-top
+    a.navbar-brand(href='/')= competition_name + ' Scoreboard'
+        button.navbar-toggler(type='button' data-toggle='collapse' data-target='#navbarCollapse' aria-controls='navbarCollapse' aria-expanded='false' aria-label='Toggle navigation')
+            span.navbar-toggler-icon
+    #navbarCollapse.collapse.navbar-collapse
+        if user_id
+            ul.navbar-nav.mr-auto
+                li.nav-item
+                    a.nav-link(href='submit') Submit Flag
+                li.nav-item
+                    a.nav-link(href='logout') Logout
+        else
+            ul.navbar-nav.mr-auto
+                li.nav-item
+                    a.nav-link(href='login') Login
+                li.nav-item
+                    a.nav-link(href='register') Register

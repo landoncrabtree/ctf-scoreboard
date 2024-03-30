@@ -12,6 +12,9 @@ This is a simple scoreboard web application that allows users to submit flags an
     - Submitted flags are checked against a list of valid flags
     - Points are awarded for each valid flag submitted
     - Duplicate flags are not accepted
+- Report and writeup file upload
+    - Users can upload a report and writeup file to explain methodology
+    - Files are stored in the `uploads` directory, organized by user ID
 - Scoreboard with user ranking, points, and number of flags submitted
 - Countdown for when the competition ends
     - When the competition ends, the scoreboard is frozen and no more flags can be submitted
@@ -25,7 +28,6 @@ This is a simple scoreboard web application that allows users to submit flags an
 ## Usage
 1. Modify `scoring.js` to include your own flags and point values
 2. Modify `scoring.js` to change the competition end date
-3. Modify `views/*` to change the competition end date
 
 ## Pictures
 ![Scoreboard](https://i.imgur.com/KknNYft.png)

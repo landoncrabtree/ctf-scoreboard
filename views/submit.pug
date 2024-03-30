@@ -1,31 +1,6 @@
-doctype html
-head
-	meta(charset='UTF-8')
-	meta(name='viewport' content='width=device-width, initial-scale=1.0')
-	title= title
-	link(href='https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css' rel='stylesheet')
-	style.
-		body {
-			padding-top: 60px;
-		}
-// Navigation Bar
-nav.navbar.navbar-expand-md.navbar-dark.bg-dark.fixed-top
-	a.navbar-brand(href='/') Scoreboard
-		button.navbar-toggler(type='button' data-toggle='collapse' data-target='#navbarCollapse' aria-controls='navbarCollapse' aria-expanded='false' aria-label='Toggle navigation')
-			span.navbar-toggler-icon
-	#navbarCollapse.collapse.navbar-collapse
-		if user_id
-			ul.navbar-nav.mr-auto
-				li.nav-item
-					a.nav-link(href='submit') Submit Flag
-				li.nav-item
-					a.nav-link(href='logout') Logout
-		else
-			ul.navbar-nav.mr-auto
-				li.nav-item
-					a.nav-link(href='login') Login
-				li.nav-item
-					a.nav-link(href='register') Register
+include components/header
+include components/navbar
+
 // Submit Flag Form
 .container.mt-5
 	if error
@@ -50,7 +25,7 @@ script(src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js')
 script(src='https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js')
 script(src='https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js')
 script.
-	var competition_ends = new Date('2024-05-01T00:00:00Z');
+	var competition_ends = new Date("#{competition_end_date}");
 	var now = new Date();
 	var time_left = competition_ends - now;
 	var days = Math.floor(time_left / (1000 * 60 * 60 * 24));
